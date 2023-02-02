@@ -1,0 +1,171 @@
+---> Node Js :- It is an open-source server side runtime environment build on V8 javascript engine to execute javascript code outside the browser.It provides an event driven, non-blocking(asynchronous) I/O for building highly scalable server side applications.
+  -> By default node is asynchronous in nature 
+  -> Synchronous means that the code runs in the dequence it is defined.If when a function is called and has returned some value , only then will the next line be executed.
+      eg:
+    const myItems=function(items){
+    items.forEach(function(item){
+       console.log(item);
+    })
+ }
+ const items=["a","b","c","d"];
+ console.log("Start");
+ myItems(items);
+ console.log("End")
+      myItems(items);
+      -> Environmental Setup of node js 
+      -> extension .js 
+      -> node filename.js
+-> Asynchronous programming : The functions are performed not according to the sequence they are defined inside the program but only when certain conditions are met.
+   setTimeout() : It performs a task after a delay of certain time. 
+   eg:
+     console.log("Start");
+     setTimeout(()=>{
+        console.log("Code Work);
+     },2000)
+     console.log("End")
+     ** Node handle asynchronous functions in the background and run all synchronous functions first.
+       --> Event Loop Mechanism 
+         Node runs in a single process and the application code runs in a single thread and thereby needs less resources. All the user requests to our application will be handled by single thread and all the I/O work is performed asynchronous for a particular request.So , this single thread doesn't wait for the request to complete and is free to handle the next request. When I/O work completes then it process the request firther and send the response.
+         An event loop is constantly watching for the events to be raised for an asynchronous job and executing callback function when the job completes.
+         Node.js process model increases the performance and scalability of the application.
+
+        -> Limitations of Node Js 
+           It is not fit for an application which performs CPU-intensive operations like image processing or other heavy computation work.
+        -> Node.js Console / REPL (Read-Eval-Print-Loop)
+    --> Node.js Module 
+         It is a simple or complex functionality origanized ina files which can be reused throughout the application (reusability)
+           -> Type of module 
+              -> Core Modules (Inbuild)
+              -> Local Modules (User Defined)
+              -> Third Party Modules (npm)
+         -> Core Modules 
+            Http Module :- used to create node server 
+              -> To access web pages | APIs of any web application , we need a web server. It handles all the http requests of the application.
+              With the help of Http module we can create our own server 
+              eg:
+              const http=require('http');
+const PORT=8899;
+const server=http.createServer((req,res)=>{
+  res.end("First node server")
+})
+server.listen(PORT,(err)=>{
+    if(err) throw err 
+    else console.log(`Server work on ${PORT}`)
+})
+   --> Handle Http Request 
+     -> createServer() method includes request and response parameters. The request object can be used to get information about the current Http request eg, url, request header,params, and data . the response object can be used to send a response for the current http request.
+     
+   --> Events Module :- to handle custom events with the help of EventEmitter class.
+     const events=require('events');// import event module
+     const eventEmitter=new events.EventEmitter();// create a object 
+     const event1=()=> console.log("Event 1");
+     const event2=()=> console.log("Event 2");
+     // to bind an event handler with an eventEmitter 
+      eventEmitter.on('myevent',event1);
+      eventEmitter.on('myevent',event2);
+     // fire an event 
+     eventEmitter.emit('myevent');
+     console.log("Program End !");
+
+   -> File System (Fs module) : used for file handling 
+       Every method in the fs module has synchronous as well as asynchronous forms.
+       eg:
+       const fs=require("fs");
+       //asynchronous read 
+       fs.readFile('notes.txt',(err,data)=>{
+          if(err) console.log(err)
+          else {
+            console.log("Asynchronous : " +data.toString())
+          }
+       })
+       console.log("-----------------")
+       //synchronous read 
+       let data=fs.readFileSync('notes.txt');
+       console.log("Synchronous : "+data.toString())
+      -> nodemon : It is a tool helps develop node based application by automatically restarting the node application when file changes .
+        npm install nodemon --g (global package)
+        nodemon filename.js
+
+      --> Parsing request body in node 
+      
+    -> npm :- stand for node package manager.It is free to use.with the hrlp of it we can download and install software 
+       npm install <package>
+       -> all npm packages are define in file called package.json 
+            name and version is compulsary 
+        -> npm init -y (package.json)
+          npm install <package> --save (the node dependency is define in package.json file) (local package within a project)
+          npm install nodemon typescript --g (global)
+        -> If we want to share our own software or code in npm registry 
+        https://www.npmjs.com/
+        npm login 
+        -> create a folder 
+          package.json 
+          {
+            "name":"unique-name",
+            "version":"1.0.0";
+          }
+          npm install axios --save 
+        index.js 
+        module.exports=async function getPosts(){
+    const axios=require("axios");
+    let results;
+    await axios.get("https://jsonplaceholder.typicode.com/posts")
+      .then((res)=>{
+        results=res.data;
+      })
+      .catch(err=>{
+         console.log(err)
+      });
+      return results;
+}
+  -> to publish 
+    npm publish
+    -> How we use publish package 
+       -> folder 
+          npm init -y 
+          npm i unique-name --save 
+        index.js 
+        const summi=require('summi-node');
+summi()
+.then(res=>{
+    console.log(res)
+})
+.catch(err=> console.log(err))
+
+--> Error Handling in node js 
+    Erros are the problems that occur in our program which cause the program to malfunction, to handle this during runtime we called error handling .It is also known as bugs.
+       -> Types of errors
+          -> Syntax error :- These are easy to find as most of the development tools like vscode show red lines whenever there is an syntex error.
+          -> Runtime error :- They are also known as operational errors and they include the problems that occur when application is in production.
+             -> failed to connect to server , request timeout , invalid user input etc. 
+             -> to handle a runtime errors we use try-catch declaration
+               try{
+                  code 
+               }catch(err){
+                   //expection 
+                   throw error 
+               }
+          -> Logical error :- They can be most difficult type of errors to track down.They occur when we make a mistake in the logic that drives our script and we dont get the result we expected.
+
+          --> Node Js Debug application 
+            -> core node.js debugger 
+            -> Built in debugger in Vs.code 
+            const fs = require("fs");
+            fs.readFile('notes.txt', (err, data) => {
+    debugger;
+    if (err) throw err;
+    else {
+        console.log("Asynchronous : " + data.toString())
+    }
+})
+  node debug filename.js (old deprecated)
+  node inspect filename.js 
+  > next : to move on the next statement 
+  >cont : to stop the execution at next debugger
+  > watch : add the expression or variables into watch 
+     watch("data")
+  -> watcher :- see the value of all expressions and variables added into watch 
+  -> pause : pause running code 
+
+   -> Built in debugger in Vs.code  
+     ctrl+shift+d
